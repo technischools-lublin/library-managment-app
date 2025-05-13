@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Book Catalog</title>
+  </head>
+  <body>
+    <h1>Books</h1>
+    <ul>
+      {% for book in books %}
+      <li>
+        <a href="{% url 'catalog:book_details' pk=book.pk %}"
+          >{{ book.title }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
