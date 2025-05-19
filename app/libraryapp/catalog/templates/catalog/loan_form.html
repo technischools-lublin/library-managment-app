@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}New Loan{% endblock %}
+{% block content %}
+<h1>New Loan</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Create loan</button>
+</form>
+
+<a href="{% url 'catalog:librarian_dashboard' %}">Back to dashboard</a>
+{% endblock %}
