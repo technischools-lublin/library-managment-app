@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Reader Dashboard{% endblock %}
+{% block content %}
+  <h1>Reader Dashboard</h1>
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% else %}
+    <h2>Active Loans:</h2>
+    <ul>
+      {% for loan in active_loans %}
+        <li>{{ loan.book }} (due {{ loan.due_at }})</li>
+      {% empty %}
+        <li>No active loans.</li>
+      {% endfor %}
+    </ul>
+    <h2>Recently Returned Books:</h2>
+    <ul>
+      {% for loan in past_loans %}
+        <li>{{ loan.book }} (returned on {{ loan.returned_at }})</li>
+      {% empty %}
+        <li>No loan history.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

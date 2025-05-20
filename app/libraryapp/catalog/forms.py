@@ -4,7 +4,9 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from .models import Book, Loan, Reader
+from .models import Book
+from users.models import Reader
+from users.models import Loan
 
 User = get_user_model()
 
@@ -16,33 +18,37 @@ class BookForm(forms.ModelForm):
 
 
 class ReaderForm(forms.ModelForm):
+    username = forms.CharField(max_length=150)
+    password1 = forms.CharField(widget=forms.PasswordInput, required=False)
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
     email = forms.EmailField()
 
     class Meta:
         model = Reader
-        fields = ("card_number",)
+        fields = ("card_number", "username", "password1", "first_name", "last_name", "email")
 
     def save(self, commit=True):
-        reader = super().save(commit=False)
-        user, _ = User.objects.get_or_create(
-            username=self.cleaned_data["email"],
-            defaults=dict(
-                first_name=self.cleaned_data["first_name"],
-                last_name=self.cleaned_data["last_name"],
-                email=self.cleaned_data["email"],
-                password=User.objects.make_random_password(),
-            ),
+        User = get_user_model()
+        username = self.cleaned_data["username"]
+        password = self.cleaned_data.get("password1") or "admin1234"
+        first_name = self.cleaned_data["first_name"]
+        last_name = self.cleaned_data["last_name"]
+        email = self.cleaned_data["email"]
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email
         )
-        reader.user = user
-        if not reader.card_number:
-            reader.card_number = str(uuid.uuid4())[:8]
+        reader = Reader(
+            user=user,
+            card_number=self.cleaned_data["card_number"] or f"CARD{user.id:05d}"
+        )
         if commit:
-            user.save()
             reader.save()
         return reader
-
 
 class LoanForm(forms.ModelForm):
     class Meta:

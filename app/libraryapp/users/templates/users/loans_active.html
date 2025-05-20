@@ -14,7 +14,7 @@
       <td>{{ loan.borrowed_at }}</td>
       <td>{{ loan.due_at }}</td>
       <td>
-        <form action="{% url 'catalog:loan_return' pk=loan.pk %}" method="post" style="display:inline;">
+        <form action="{% url 'users:loan_return' pk=loan.pk %}" method="post" style="display:inline;">
           {% csrf_token %}
           <button type="submit">Return</button>
         </form>
