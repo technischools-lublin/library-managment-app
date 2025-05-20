@@ -3,11 +3,15 @@ from django.contrib.auth.decorators import (
 )
 from django.shortcuts import (
     render,
-    get_object_or_404
+    get_object_or_404,
+    redirect,
 )
 from users.models import Loan
+from users.views import staff_required
 
 from .models import Book
+from .forms import BookForm
+
 @login_required
 def books_list(request):
     books = Book.objects.all()
@@ -40,3 +44,15 @@ def loans(request):
         'headers': headers,
         'rows': rows
     })
+
+@login_required
+@staff_required
+def book_add(request):
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("catalog:books_list")
+    else:
+        form = BookForm()
+    return render(request, "catalog/book_form.html", {"form": form})

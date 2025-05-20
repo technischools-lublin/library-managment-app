@@ -74,6 +74,8 @@ class ReaderForm(forms.ModelForm):
         return reader
 
 class LoanForm(forms.ModelForm):
+    reader = forms.ModelChoiceField(queryset=Reader.objects.all(), label="Reader")
+
     class Meta:
         model = Loan
         fields = ("book", "reader", "due_at")
