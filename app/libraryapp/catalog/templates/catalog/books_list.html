@@ -5,10 +5,16 @@
 <ul>
   {% for book in books %}
   <li>
-    <a href="{% url 'catalog:book_details' pk=book.pk %}"
-      >{{ book.title }}</a
-    >
+    <a href="{% url 'catalog:book_details' pk=book.pk %}{% if request.user.is_staff %}?role=librarian{% elif request.user.reader %}?role=reader{% endif %}">
+      {{ book.title }}
+    </a>
   </li>
   {% endfor %}
 </ul>
+
+<p>
+  <a href="{% if request.user.is_staff %}/{% elif request.user.reader %}/reader{% endif %}">
+    Go to your dashboard
+  </a>
+</p>
 {% endblock %}
