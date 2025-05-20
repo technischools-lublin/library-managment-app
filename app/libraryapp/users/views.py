@@ -12,7 +12,7 @@ from datetime import date
 from decimal import Decimal
 
 from .models import Reader, Loan
-from catalog.forms import ReaderForm, LoanForm
+from .forms import ReaderForm, LoanForm
 
 
 staff_required = user_passes_test(lambda u: u.is_staff)
@@ -47,9 +47,6 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            role = form.cleaned_data["role"]
-
-            user.is_staff = role == "staff"
             user.save()
 
             if not user.is_staff:
