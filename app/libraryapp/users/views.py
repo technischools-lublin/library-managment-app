@@ -73,7 +73,7 @@ def login_view(request):
             elif user.is_staff:
                 return redirect("users:librarian_dashboard")
             else:
-                return redirect("users:home")
+                return redirect("users:register")
     else:
         form = AuthenticationForm()
     return render(request, "users/login.html", {"form": form})

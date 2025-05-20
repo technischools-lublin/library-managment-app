@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Book Catalog</title>
-  </head>
-  <body>
-    <h1>Books</h1>
-    <ul>
-      {% for book in books %}
-      <li>
-        <a href="{% url 'catalog:book_details' pk=book.pk %}"
-          >{{ book.title }}</a
-        >
-      </li>
-      {% endfor %}
-    </ul>
-
-  <a href="{% url 'users:librarian_dashboard' %}">Back to dashboard</a>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Book Catalog{% endblock %}
+{% block content %}
+<h1>Books</h1>
+<ul>
+  {% for book in books %}
+  <li>
+    <a href="{% url 'catalog:book_details' pk=book.pk %}"
+      >{{ book.title }}</a
+    >
+  </li>
+  {% endfor %}
+</ul>
+<a href="/reader"
+>Back to dashboard</a
+>
+{% endblock %}
