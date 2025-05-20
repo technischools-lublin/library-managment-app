@@ -12,7 +12,7 @@ from datetime import date
 from decimal import Decimal
 
 from .models import Reader, Loan
-from .forms import ReaderForm, LoanForm
+from .forms import ReaderForm, LoanForm, BookForm
 
 
 staff_required = user_passes_test(lambda u: u.is_staff)
@@ -151,3 +151,16 @@ def loans_overdue(request):
         "book", "reader"
     )
     return render(request, "users/loans_overdue.html", {"loans": overdue})
+
+
+@login_required
+@staff_required
+def book_add(request):
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("catalog:books_list")
+    else:
+        form = BookForm()
+    return render(request, "users/book_form.html", {"form": form})

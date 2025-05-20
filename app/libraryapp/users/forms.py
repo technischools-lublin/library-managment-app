@@ -86,3 +86,8 @@ class LoanForm(forms.ModelForm):
         if not book.is_available:
             raise ValidationError("This book is currently on loan.")
         return book
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = '__all__'

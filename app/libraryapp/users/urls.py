@@ -12,6 +12,7 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("home/", views.home, name="home"),
     path("readers/add/", views.reader_add, name="reader_add"),
+    path("books/add/", views.book_add, name="book_add"),
 
     path("readers/", views.readers_list, name="readers_list"),
     path("readers/add/", views.reader_add, name="reader_add"),

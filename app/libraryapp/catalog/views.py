@@ -10,7 +10,6 @@ from users.models import Loan
 from users.views import staff_required
 
 from .models import Book
-from .forms import BookForm
 
 @login_required
 def books_list(request):
@@ -24,14 +23,21 @@ def book_details(request, pk):
 
 @login_required
 def loans(request):
-    loans = Loan.objects.select_related('book', 'reader__user').all()
+    reader = getattr(request.user, 'reader', None)
+    if not reader:
+        return render(request, 'catalog/loans.html', {
+            'title': 'Your Loans',
+            'headers': [],
+            'rows': []
+        })
 
-    headers = ['Book', 'Reader', 'Borrowed At', 'Due At', 'Returned At', 'Fine', 'Overdue']
+    loans = Loan.objects.filter(reader=reader).select_related('book', 'reader__user')
+
+    headers = ['Book', 'Borrowed At', 'Due At', 'Returned At', 'Fine', 'Overdue']
     rows = []
     for loan in loans:
         rows.append([
             loan.book.title,
-            loan.reader.user.get_full_name(),
             loan.borrowed_at,
             loan.due_at,
             loan.returned_at or '',
@@ -40,19 +46,7 @@ def loans(request):
         ])
 
     return render(request, 'catalog/loans.html', {
-        'title': 'All Loans',
+        'title': 'Your Loans',
         'headers': headers,
         'rows': rows
     })
-
-@login_required
-@staff_required
-def book_add(request):
-    if request.method == "POST":
-        form = BookForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("catalog:books_list")
-    else:
-        form = BookForm()
-    return render(request, "catalog/book_form.html", {"form": form})
