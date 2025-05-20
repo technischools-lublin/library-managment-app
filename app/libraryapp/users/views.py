@@ -1,12 +1,20 @@
 import uuid
 
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 
 from catalog.models import Reader
 from .forms import RegisterForm
+
+staff_required = user_passes_test(lambda u: u.is_staff)
+
+@login_required
+@staff_required
+def librarian_dashboard(request):
+    return render(request, "users/librarian_dashboard.html")
+
 
 def register(request):
     if request.method == "POST":
@@ -24,7 +32,7 @@ def register(request):
                 )
 
             login(request, user)
-            return redirect("catalog:librarian_dashboard")
+            return redirect("users:librarian_dashboard")
     else:
         form = RegisterForm()
 
@@ -36,7 +44,7 @@ def login_view(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect("catalog:librarian_dashboard")
+            return redirect("users:librarian_dashboard")
     else:
         form = AuthenticationForm()
     return render(request, "users/login.html", {"form": form})

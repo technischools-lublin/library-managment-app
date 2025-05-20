@@ -13,7 +13,7 @@ from django.shortcuts import (
 )
 
 from .models import Book, Reader, Loan
-from .forms import BookForm, ReaderForm, LoanForm   # you’ll create these
+from .forms import BookForm, ReaderForm, LoanForm
 
 
 staff_required = user_passes_test(lambda u: u.is_staff)
