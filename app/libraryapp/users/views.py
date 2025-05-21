@@ -55,7 +55,12 @@ def register(request):
                 )
 
             login(request, user)
-            return redirect("users:librarian_dashboard")
+            if getattr(user, "reader", None):
+                return redirect("users:reader_dashboard")
+            elif user.is_staff:
+                return redirect("users:librarian_dashboard")
+            else:
+                return redirect("users:register")
     else:
         form = RegisterForm()
 
