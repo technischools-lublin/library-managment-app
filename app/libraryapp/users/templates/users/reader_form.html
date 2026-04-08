@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Add Reader{% endblock %}
+{% block content %}
+<h1>Add Reader</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'users:readers_list' %}">Back to list</a>
+{% endblock %}

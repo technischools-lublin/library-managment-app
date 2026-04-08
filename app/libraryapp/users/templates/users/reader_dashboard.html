@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<header>
+  <h1>Hello, {{ user.username }}!</h1>
+</header>
+<div class="container">
+  <div class="main-content">
+    <div class="links">
+      <a href="{% url 'catalog:books_list' %}">Books list</a><br>
+      <a href="{% url 'catalog:loans' %}">Loans</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
